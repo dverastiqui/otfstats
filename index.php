@@ -19,6 +19,10 @@
 	$zone_minutes['red'] = 0;
 	$zone_minutes['total'] = 0;
 
+	$calories_total = 0;
+	$steps_total = 0;
+	$splat_points_total = 0;
+
 	while($RS = $results->fetch_assoc()) {
 	    $classes[] = $RS;
 	    $first_class = $RS['stamp'];
@@ -28,6 +32,15 @@
 		$zone_minutes['green'] += $RS['zone_green'];
 		$zone_minutes['orange'] += $RS['zone_orange'];
 		$zone_minutes['red'] += $RS['zone_red'];
+
+		$calories_total += $RS['calories'];
+		$steps_total += $RS['steps'];
+		$splat_points_total += $RS['splat_points'];
+	}
+
+	$total_minutes = 0;
+	foreach($zone_minutes as $key=>$value) {
+		$total_minutes += $value;
 	}
 
 
@@ -39,10 +52,11 @@
     <meta name="description" content="Orange Theory Fitness States">
     <title>OTF Stats</title>
 
-    <!-- Bootstrap core CSS -->
-	
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Domine|Oswald&display=swap" rel="stylesheet">
 
+    <!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -56,27 +70,214 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container mt-4">
 
 	<div class="row">
 	    <div class="col">
 
 			<h1 class='display-4'>Orange Theory Fitness Stats</h1>
+			<div class='mb-4'>
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
+					Add Class
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-lg" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLabel">Add OTF Class</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				      
+				      	<form class="form" action="process.php" method="post">
+
+							<div class="form-group">
+								<label>Class Date</label>
+								<input type="date" class="form-control" name="stamp">
+							</div>
+
+							<div class="row mb-2">
+
+							    <div class="col">
+							    	<label>Gray</label>
+			   						<input type="number" class="form-control" name="zone_gray">
+							    </div>
+
+							    <div class="col">
+							    	<label>Blue</label>
+			   						<input type="number" class="form-control" name="zone_blue">
+							    </div>
+
+							    <div class="col">
+							    	<label>Green</label>
+			   						<input type="number" class="form-control" name="zone_green">
+							    </div>
+
+							    <div class="col">
+							    	<label>Orange</label>
+			   						<input type="number" class="form-control" name="zone_orange">
+							    </div>
+
+							    <div class="col">
+							    	<label>Red</label>
+			   						<input type="number" class="form-control" name="zone_red">
+							    </div>
+
+							</div>
+
+							<div class="row mb-2">
+							    <div class="col">
+							    	<label>Calories</label>
+			   						<input type="number" class="form-control" name="calories">
+							    </div>
+							    <div class="col">
+							    	<label>Splat Points</label>
+			   						<input type="number" class="form-control" name="splat_points">
+							    </div>
+							    <div class="col">
+							    	<label>Heart Rate Avg</label>
+			   						<input type="number" class="form-control" name="heart_rate_avg">
+							    </div>
+							    <div class="col">
+							    	<label>Heart Rate Peak</label>
+			   						<input type="number" class="form-control" name="heart_rate_peak">
+							    </div>
+							    <div class="col">
+							    	<label>Steps</label>
+			   						<input type="number" class="form-control" name="steps">
+							    </div>
+							</div>
+
+							<div class="form-group">
+								<label>Notes</label>
+								<input type="text" class="form-control" name="notes">
+							</div>
+
+							
+							<button type="submit" class="btn btn-primary mt-2">Submit</button>
+						</form>	
+
+
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary">Save changes</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
 			<p class='lead'>You have been to <?=count($classes); ?> classes since <?=$first_class; ?>.</p>
 
 
 			<h4>Time Spent in Each Zone</h4>
 
+			<?php
+
+				foreach($zone_minutes as $key=>$value) {
+
+					
+				}
+
+			?>
+
+
 			<div class="row">
-			    <div class="col text-center">
+			    <div class="col-1">
+
+					Gray			                 
+
+			    </div>
+			    <div class="col-1">
+
+			    	<?=$zone_minutes['gray']; ?>
+
+			    </div>
+
+			    <div class="col-10">
+
+			    	<?php
+
+		    			$percentage = number_format($zone_minutes['gray'] / $total_minutes * 103,0) * 5;
+
+		    		?>
+		    		<img src="img/pixel_gray.png" height='20' width='<?=$percentage;?>'>
+
+			    </div>
+			</div>
+
+
+
+			<div class="row">
+			    <div class="col-1">
+
+					Greem			                 
+
+			    </div>
+			    <div class="col-1">
+
+			    	<?=$zone_minutes['green']; ?>
+
+			    </div>
+
+			    <div class="col-10">
+
+			    	<?php
+
+		    			$percentage = number_format($zone_minutes['green'] / $total_minutes * 100,0) * 5;
+		    			
+
+		    		?>
+		    		<img src="img/pixel_green.png" height='20' width='<?=$percentage;?>'>
+
+			    </div>
+			</div>
+
+
+
+			<div class="row">
+			    <div class="col text-center align-bottom">
+
+			    	<div style="height: 100px;">
+			    		<?php
+
+			    			$percentage = number_format($zone_minutes['gray'] / $total_minutes * 100,0);
+
+			    		?>
+			    		<img src="img/pixel_gray.png" width='20' height='<?=$percentage;?>'>
+			    	</div>
+
+
 			    	<b>Gray</b><br>
 			    	<?=$zone_minutes['gray']; ?>
 			    </div>
 			    <div class="col text-center">
+			    	<div>
+			    		<?php
+
+			    			$percentage = number_format($zone_minutes['blue'] / $total_minutes * 100,0);
+
+			    		?>
+			    		<img src="img/pixel_blue.png" width='20' height='<?=$percentage;?>'>
+			    	</div>
+
 			    	<b>Blue</b><br>
 			    	<?=$zone_minutes['blue']; ?>
 			    </div>
 			    <div class="col text-center">
+			    	<div>
+			    		<?php
+
+			    			$percentage = number_format($zone_minutes['green'] / $total_minutes * 100,0);
+
+			    		?>
+			    		<img src="img/pixel_green.png" width='20' height='<?=$percentage;?>'>
+			    	</div>
 			    	<b>Green</b><br>
 			    	<?=$zone_minutes['green']; ?>
 			    </div>
@@ -93,87 +294,75 @@
 	    </div>
 	</div>
 
-	<?php if($admin) { ?>
-
-	<div class="row">
+	<div class="row my-4">
 	    <div class="col">
 
-			<h4>Add Class</h4>
+	    	<h1>All Time</h1>
 
-			<form class="form" action="process.php" method="post">
+	    	<div class="row">
+			    <div class="col-3">
+			    	&nbsp;
+			    </div>
+			    <div class='col-3 font-weight-bold'>
+			    	Calories
+			    </div>
+			    <div class='col-3 font-weight-bold'>
+			    	Splats
+			    </div>
+			    <div class='col-3 font-weight-bold'>
+			    	Steps
+			    </div>
+			</div>
 
-				<div class="form-group">
-					<label>Class Date</label>
-					<input type="date" class="form-control" name="stamp">
-				</div>
+	    	<div class="row">
+			    <div class="col">
+			    	This Week
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			</div>
 
-				<div class="row mb-2">
+			<div class="row">
+			    <div class="col">
+			    	This Year
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			    <div class='col-3'>
+			    	#
+			    </div>
+			</div>
 
-				    <div class="col">
-				    	<label>Gray</label>
-   						<input type="number" class="form-control" name="zone_gray">
-				    </div>
+			<div class="row">
+			    <div class="col">
+			    	All Time
+			    </div>
+			    <div class='col-3'>
+			    	<?=number_format($calories_total); ?>
+			    </div>
+			    <div class='col-3'>
+			    	<?=number_format($splat_points_total); ?>
+			    </div>
+			    <div class='col-3'>
+			    	<?=number_format($steps_total); ?>
+			    </div>
+			</div>
 
-				    <div class="col">
-				    	<label>Blue</label>
-   						<input type="number" class="form-control" name="zone_blue">
-				    </div>
-
-				    <div class="col">
-				    	<label>Green</label>
-   						<input type="number" class="form-control" name="zone_green">
-				    </div>
-
-				    <div class="col">
-				    	<label>Orange</label>
-   						<input type="number" class="form-control" name="zone_orange">
-				    </div>
-
-				    <div class="col">
-				    	<label>Red</label>
-   						<input type="number" class="form-control" name="zone_red">
-				    </div>
-
-				</div>
-
-				<div class="row mb-2">
-				    <div class="col">
-				    	<label>Calories</label>
-   						<input type="number" class="form-control" name="calories">
-				    </div>
-				    <div class="col">
-				    	<label>Splat Points</label>
-   						<input type="number" class="form-control" name="splat_points">
-				    </div>
-				    <div class="col">
-				    	<label>Heart Rate Avg</label>
-   						<input type="number" class="form-control" name="heart_rate_avg">
-				    </div>
-				    <div class="col">
-				    	<label>Heart Rate Peak</label>
-   						<input type="number" class="form-control" name="heart_rate_peak">
-				    </div>
-				    <div class="col">
-				    	<label>Steps</label>
-   						<input type="number" class="form-control" name="steps">
-				    </div>
-				</div>
-
-				<div class="form-group">
-					<label>Notes</label>
-					<input type="text" class="form-control" name="notes">
-				</div>
-
-				
-				<button type="submit" class="btn btn-primary mt-2">Submit</button>
-			</form>	                 
 
 	    </div>
 	</div>
 
-
-
-	<?php } ?>
 
 	<!-- Debug Table Dump -->
 

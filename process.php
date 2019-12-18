@@ -2,6 +2,11 @@
 
 	include "functions.php";
 
+	if(isset($_GET['passwd']) && $_GET['passwd'] == $passwd)
+		$admin = true;
+	else
+		$admin = false;
+
 	if(isset($_POST['stamp'])) {
 
 
